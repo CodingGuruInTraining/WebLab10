@@ -9,18 +9,21 @@ router.get('/', function(req, res, next) {
         if (err) {
             return next(err);
         }
+        // Creates page and inserts values into placeholders.
         res.render('index', { title: 'TODO list' , tasks: tasks });
     });
 });
 
+// Route for adding an item.
 router.post('/add', function(req, res, next){
+    // Checks for missing data.
     if (!req.body || !req.body.text) {
         req.flash('error', 'Please enter some text');
         res.redirect('/');
     }
     else {
         var task = { text : req.body.text, completed: false};
-
+        // Adds new task entered.
         req.task_col.insertOne(task, function(err) {
             if (err) {
                 return next(err);
@@ -30,7 +33,9 @@ router.post('/add', function(req, res, next){
     }
 });
 
+// Route for completing a task action.
 router.post('/done', function(req, res, next) {
+    // Updates the object's completion status.
     req.task_col.updateOne(
         { _id : ObjectID(req.body._id) },
         {$set : { completed : true }},
@@ -49,6 +54,7 @@ router.post('/done', function(req, res, next) {
     )
 });
 
+// Route to navigate to completed page.
 router.get('/completed', function(req, res, next) {
     req.task_col.find({completed:true}).toArray(function(err, tasks) {
         if (err) {
@@ -58,6 +64,7 @@ router.get('/completed', function(req, res, next) {
     });
 });
 
+// Route for deletion action.
 router.post('/delete', function(req, res, next) {
     req.task_col.deleteOne({ _id : ObjectID(req.body._id) }, function(err, result) {
         if (err) {
@@ -73,6 +80,7 @@ router.post('/delete', function(req, res, next) {
     })
 });
 
+// Route for update all action.
 router.post('/alldone', function(req, res, next) {
     req.task_col.updateMany(
         {completed:false},
