@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Task = require('../models/task.js');
-var ObjectID = require('mongodb').ObjectID;
+// var ObjectID = require('mongodb').ObjectID;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -24,6 +24,7 @@ router.post('/add', function(req, res, next){
         res.redirect('/');
     }
     else {
+        console.log(req.body);
         var task = Task({ text : req.body.text, completed: false});
         task.save(function(err) {
         // req.task_col.insertOne(task, function(err) {
