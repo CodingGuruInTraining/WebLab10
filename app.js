@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var assert = require('assert');
 var index = require('./routes/index');
@@ -16,32 +15,22 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+// Connects locally using mongoose.
 var url = 'mongodb://localhost:27017/todo';
 mongoose.connect(url);
-// MongoClient.connect(url, function(err, db) {
-//   console.log('Errors? ' + err);
-//   assert(!err);
-//
-//     app.use(function(req, res, next) {
-//         req.task_col = db.collection('tasks');
-//         next();
-//     });
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// May add some security feature.
 app.use(session({secret:'top secret key'}));
 app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+// Designate home page.
 app.use('/', index);
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -60,5 +49,4 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-// });
 module.exports = app;
